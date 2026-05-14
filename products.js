@@ -75,25 +75,21 @@ async function uploadSelectedFile() {
     const fileInput = document.getElementById('file-input');
     const status = document.getElementById('upload-status');
     
-    if (fileInput.files.length === 0) {
-        alert("Selecione uma imagem primeiro!");
-        return;
-    }
+    if (fileInput.files.length === 0) return alert("Selecione uma imagem!");
 
     const selectedFile = fileInput.files[0];
-    status.innerText = "Enviando... aguarde.";
+    status.innerText = "Enviando... (isso pode levar alguns segundos)";
 
-    const reader = new FileReader(); // [cite: 37]
-    reader.readAsDataURL(selectedFile); // [cite: 38]
+    const reader = new FileReader();
+    reader.readAsDataURL(selectedFile);
     
     reader.onload = async () => {
-        const base64 = reader.result.split(',')[1]; // Extrai apenas o código da imagem [cite: 40]
+        const base64 = reader.result.split(',')[1];
         
         try {
+            // REMOVIDO: mode: "no-cors"
             const response = await fetch(API_URL, {
                 method: "POST",
-                // Removido o 'mode: "no-cors"' para evitar a blindagem do navegador
-                redirect: "follow", 
                 body: JSON.stringify({
                     action: "uploadImage",
                     name: selectedFile.name,
@@ -102,21 +98,20 @@ async function uploadSelectedFile() {
                 })
             });
 
-            // Extrai a resposta como texto bruto antes de passar para JSON para evitar falhas de sintaxe
-            const text = await response.text(); 
-            const data = JSON.parse(text); 
+            const data = await response.json(); 
 
             if (data.url) {
-                currentImages.push(data.url); // Adiciona o link direto .png à lista [cite: 52]
+                currentImages.push(data.url);
                 renderImgTags();
                 status.innerText = "Upload concluído!";
-                fileInput.value = ""; // Limpa o campo
+                fileInput.value = "";
             } else {
-                throw new Error(data.error);
+                status.innerText = "Erro no script: " + (data.error || "Verifique o Drive");
+                console.error("Erro retornado pelo Apps Script:", data.error);
             }
         } catch (err) {
-            console.error(err);
-            status.innerText = "Erro no upload: " + err;
+            status.innerText = "Erro de conexão/CORS. Verifique a URL da API.";
+            console.error("Erro no Fetch:", err);
         }
     };
 }
