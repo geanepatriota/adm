@@ -55,12 +55,13 @@
                     </div>
                     <textarea id="prod-desc" rows="4"></textarea>
                     
-                    <label>Upload de Imagens (Postimg):</label>
-                    <iframe src="https://postimg.cc/DWdkmm1p/f6a144f0" width="100%" height="200" style="border:1px solid #000;"></iframe>
-                    <div class="img-paste-area">
-                        <button type="button" onclick="pasteImageHtml()">Colar link copiado</button>
-                        <div id="img-tags-container"></div>
-                    </div>
+                    <label>Upload de Imagem (Direto para o Drive):</label>
+<div class="img-upload-area">
+    <input type="file" id="file-input" accept="image/*">
+    <button type="button" onclick="uploadSelectedFile()">Fazer Upload</button>
+    <div id="upload-status"></div>
+    <div id="img-tags-container"></div>
+</div>
                     
                     <div class="form-actions">
                         <button onclick="saveProduct()">Salvar Produto</button>
