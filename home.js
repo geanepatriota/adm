@@ -3,7 +3,7 @@ function renderHome() {
     list.innerHTML = '';
 
     if (!globalData.orders || globalData.orders.length <= 1) {
-        list.innerHTML = '<p>Nenhum pedido pendente.</p>';
+        list.innerHTML = '<p>CARREGANDO...</p>';
         return;
     }
 
