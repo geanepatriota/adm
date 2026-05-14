@@ -71,19 +71,50 @@ function formatDescription(startTag, endTag = null) {
     textarea.focus();
 }
 
-async function pasteImageHtml() {
-    try {
-        const text = await navigator.clipboard.readText();
-        const match = text.match(/src="([^"]+)"/);
-        if (match && match[1]) {
-            currentImages.push(match[1]);
-            renderImgTags();
-        } else {
-            alert("Nenhum link de imagem encontrado na área de transferência.");
-        }
-    } catch(err) {
-        alert("Erro ao colar: " + err);
+async function uploadSelectedFile() {
+    const fileInput = document.getElementById('file-input');
+    const status = document.getElementById('upload-status');
+    
+    if (fileInput.files.length === 0) {
+        alert("Selecione uma imagem primeiro!");
+        return;
     }
+
+    const selectedFile = fileInput.files[0];
+    status.innerText = "Enviando para o Drive... aguarde.";
+
+    const reader = new FileReader(); // [cite: 37]
+    reader.readAsDataURL(selectedFile); // [cite: 38]
+    
+    reader.onload = async () => {
+        const base64 = reader.result.split(',')[1]; // Extrai apenas o código da imagem [cite: 40]
+        
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST", // [cite: 42]
+                body: JSON.stringify({
+                    action: "uploadImage",
+                    name: selectedFile.name, // [cite: 44]
+                    type: selectedFile.type, // [cite: 45]
+                    base64: base64 // [cite: 46]
+                })
+            });
+
+            const data = await response.json(); // [cite: 50, 51]
+
+            if (data.url) {
+                currentImages.push(data.url); // Adiciona o link direto .png à lista [cite: 52]
+                renderImgTags();
+                status.innerText = "Upload concluído!";
+                fileInput.value = ""; // Limpa o campo
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (err) {
+            console.error(err);
+            status.innerText = "Erro no upload: " + err;
+        }
+    };
 }
 
 function renderImgTags() {
