@@ -5,7 +5,7 @@ function renderProducts() {
     list.innerHTML = '';
 
     if (!globalData.products || globalData.products.length <= 1) {
-        list.innerHTML = '<p>Nenhum produto cadastrado.</p>';
+        list.innerHTML = '<p>CARREGANDO...</p>';
         return;
     }
 
@@ -81,7 +81,7 @@ async function uploadSelectedFile() {
     }
 
     const selectedFile = fileInput.files[0];
-    status.innerText = "Enviando para o Drive... aguarde.";
+    status.innerText = "Enviando... aguarde.";
 
     const reader = new FileReader(); // [cite: 37]
     reader.readAsDataURL(selectedFile); // [cite: 38]
