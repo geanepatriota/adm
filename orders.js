@@ -3,7 +3,7 @@ function renderOrders() {
     list.innerHTML = '';
 
     if (!globalData.orders || globalData.orders.length <= 1) {
-        list.innerHTML = '<p>Nenhum pedido encontrado.</p>';
+        list.innerHTML = '<p>CARREGANDO...</p>';
         return;
     }
 
