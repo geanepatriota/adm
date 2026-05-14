@@ -91,14 +91,16 @@ async function uploadSelectedFile() {
         
         try {
             const response = await fetch(API_URL, {
-                method: "POST", // [cite: 42]
-                body: JSON.stringify({
-                    action: "uploadImage",
-                    name: selectedFile.name, // [cite: 44]
-                    type: selectedFile.type, // [cite: 45]
-                    base64: base64 // [cite: 46]
-                })
-            });
+    method: "POST",
+    mode: "no-cors", // Tente adicionar isso se o erro persistir, mas o ideal é tratar o redirecionamento:
+    redirect: "follow", 
+    body: JSON.stringify({
+        action: "uploadImage",
+        name: selectedFile.name,
+        type: selectedFile.type,
+        base64: base64
+    })
+});
 
             const data = await response.json(); // [cite: 50, 51]
 
