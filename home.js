@@ -13,7 +13,7 @@ function renderHome() {
         const row = globalData.orders[i];
         const status = row[7]; // H
         
-        if (status === 'pendente') {
+        if (status === 'Pendente') {
             hasPending = true;
             const user = row[0];
             const total = row[5];
